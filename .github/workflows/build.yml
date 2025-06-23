@@ -22,7 +22,7 @@ jobs:
 
     - name: "Start a Debian 12 VM"
       run: |
-        limactl start --name=debian12 --cpus=1 --memory=1 --network=lima:user-v2 template://debian-12
+        limactl start --cpus=1 --memory=1 --network=lima:user-v2 template://debian-12
 
     - name: "Clone repository"
       run: |
