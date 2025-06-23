@@ -27,8 +27,27 @@ jobs:
     - name: "Clone repository"
       run: |
         lima git clone --depth 1 -b "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git" .
-
-    - name: "Where am I"
+    - name: "BUILD.md"
       run: |
+        # Building dependencies
         lima pwd
         lima ls
+        lima sudo apt-get update && sudo apt-get -y install git build-essential debhelper libssl-dev autotools-dev psmisc net-tools systemd
+        lima git clone --depth 1 -b "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git"
+        lima pushd ripe-atlas-software-probe
+        lima pwd
+        lima ls
+
+        # Building the packages
+        lima dpkg-buildpackage -b -us -uc
+        lima cp ../ripe-atlas-*.deb .
+        lima pushd .repo
+        lima dpkg-buildpackage -b -us -uc
+        lima popd
+
+        # Installing the probe package
+        lima sudo dpkg -i ripe-atlas-common*.deb ripe-atlas-probe*.deb
+        lima pwd
+        lima ls
+        # Follow the instructions printed after installation to start and register and your probe
+        lima popd
