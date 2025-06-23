@@ -24,9 +24,6 @@ jobs:
       run: |
         limactl start --name=default --cpus=1 --memory=1 --network=lima:user-v2 template://debian-12
 
-    - name: "Clone repository"
-      run: |
-        lima git clone --depth 1 -b "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git" .
     - name: "BUILD.md"
       run: |
         # Building dependencies
