@@ -26,10 +26,12 @@ jobs:
 
     - name: "BUILD.md"
       run: |
+        set -eux
         # Building dependencies
         lima pwd
         lima ls
-        lima sudo apt-get update && sudo apt-get -y install git build-essential debhelper libssl-dev autotools-dev psmisc net-tools systemd
+        lima sudo apt-get update
+        lima sudo apt-get -y install git build-essential debhelper libssl-dev autotools-dev psmisc net-tools systemd
         lima git clone --depth 1 -b "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git"
         lima pushd ripe-atlas-software-probe
         lima pwd
