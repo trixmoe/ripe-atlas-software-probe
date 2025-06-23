@@ -1,0 +1,34 @@
+name: Build RIPE Atlas Software Probe
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  debian:
+    runs-on: ubuntu-24.04
+    steps:
+    - name: "Set up Lima"
+      uses: lima-vm/lima-actions/setup@v1
+      id: lima-actions-setup
+
+    - name: "Cache ~/.cache/lima"
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/lima
+        key: lima-${{ steps.lima-actions-setup.outputs.version }}
+
+    - name: "Start a Debian 12 VM"
+      run: |
+        limactl start --name=debian12 --cpus=1 --memory=1 --network=lima:user-v2 template://debian-12
+
+    - name: "Clone repository"
+      run: |
+        lima git clone --depth 1 -b "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git" .
+
+    - name: "Where am I"
+      run: |
+        lima pwd
+        lima ls
