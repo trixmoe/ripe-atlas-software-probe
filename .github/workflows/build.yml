@@ -22,7 +22,7 @@ jobs:
 
     - name: "Start a Debian 12 VM"
       run: |
-        limactl start --name=default --cpus=1 --memory=1 --network=lima:user-v2 template://debian-12
+        limactl start --name=default --cpus=1 --memory=1 --network=lima:user-v2 --mount-writable --mount-type=virtiofs template://debian-12
 
     - name: "BUILD.md"
       run: |
